@@ -1,7 +1,3 @@
-import plotly.express as px
-import dash_html_components as html
-import dash_core_components as dcc
-import dash
 import pandas as pd
 from dash import Dash, html, dcc, Input, Output
 import altair as alt
@@ -18,8 +14,9 @@ app.layout = html.Div([
     dcc.Slider(2000, 2018, 1,
                value=2007,
                id='my-slider',
-               marks=None,
-               tooltip={"placement": "bottom", "always_visible": True}
+                marks={str(year): str(year) for year in range(2000, 2019)}
+            #    marks=None,
+            #    tooltip={"placement": "bottom", "always_visible": True}
                ),
     ])
 
@@ -43,16 +40,3 @@ def plot_altair(year):
 if __name__ == '__main__':
     app.run_server(debug=True)
 
-# fig = px.scatter(df.query("year==2007"), x="income", y="life_expectancy",
-#                  size="population", color="region",
-#                  hover_name="country", log_x=True, size_max=60)
-
-
-
-# app = dash.Dash()
-# app.layout = html.Div([
-#     dcc.Graph(figure=fig)
-# ])
-
-# # Turn off reloader if inside Jupyter
-# app.run_server(debug=True, use_reloader=False)
