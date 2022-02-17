@@ -15,20 +15,22 @@ app.layout = html.Div([
     html.Iframe(
         id='scatter',
         style={'border-width': '0', 'width': '100%', 'height': '400px'}),
-    dcc.Dropdown(
-        id='xcol-widget',
-        value='Horsepower',  # REQUIRED to show the plot on the first page load
-        options=[{'label': col, 'value': col} for col in df.columns])
-        ])
+    dcc.Slider(2000, 2018, 1,
+               value=2007,
+               id='my-slider',
+               marks=None,
+               tooltip={"placement": "bottom", "always_visible": True}
+               ),
+    ])
 
 # Set up callbacks/backend
 
 
 @app.callback(
     Output('scatter', 'srcDoc'),
-    Input('xcol-widget', 'value'))
-def plot_altair(xcol):
-    chart = alt.Chart(df.query("year==2007")).mark_point(
+    Input('my-slider', 'value'))
+def plot_altair(year):
+    chart = alt.Chart(df.query(f'year=={year}')).mark_point(
         filled=True, opacity=0.5).encode(
         alt.X('life_expectancy', scale=alt.Scale(domain=(50, 85))),
         alt.Y('income', scale=alt.Scale(
@@ -37,8 +39,6 @@ def plot_altair(xcol):
         tooltip=['country', 'year', 'life_expectancy', 'income', 'population'],
         color='region').interactive()
     return chart.to_html()
-
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)
